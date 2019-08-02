@@ -1,4 +1,3 @@
 # Space-Game
 MSSA group project
-<p> Authors: Will, Isaac, Channing
-<p> Adding Menu
+<p> Authors: Will, Isaac, Channing <p> Adding Menu 

@@ -1,121 +1,104 @@
+//using EO.Internal;
 using System;
 
 namespace SpaceGame
 {
     class Program
     {
-
         static void Main(string[] args)
         {
-            
-
-            //setting up game
+            // inside the for loops: variable "i" is used for the row position. "j" is used for the column position.
             Random rand = new Random();
             int score = 0;
             int coinPos = 0;
-
-
-            int size = 11; // size based on difficulty
+            int size = new int(); // size based on difficulty
             string[,] game = new string[size, size];
-
-            for (int i = 1; i < game.GetLength(0); i++) // width    //filling in array
-            {
-                for (int j = 1; j < game.GetLength(1); j++) // height
-                {
-                    game[i, j] = " ";
-                }
-            }
-
-            for (int i = 0; i < size; i++)      //left border
-            {
-                game[i, 0] = "|";
-            }
-
-            for (int i = 0; i < size; i++)      //right border
-            {
-                game[i, size - 1] = "|";
-            }
-
-            for (int j = 0; j < size; j++)      //top border
-            {
-                game[0, j] = "_";
-            }
-
             int playerPos = size - (size / 2);
             int oldPosition = playerPos;
-            game[size - 1, playerPos] = "V";    //player starting position
-
             int gameCounter = 0;
-
             int playerPosX = size - 1;
-
-            while (gameCounter <= 20)       //game loop
+            int difficultyLength = new int();
+            // BUILD GAME BOARD //
+            // adding empty space inside game board
+            for (int i = 1; i < game.GetLength(0); i++) // Filling in each row    //filling in array
+            {for (int j = 1; j < game.GetLength(1); j++) // Filling in each column for the row it's in
+                {game[i, j] = " ";}}
+            //Building left border
+            for (int i = 0; i < size; i++)      
+            {game[i, 0] = "|";}
+            //Building right border
+            for (int i = 0; i < size; i++)      
+            {game[i, size - 1] = "|";}
+            //Building top border
+            for (int j = 0; j < size; j++)      
+            {game[0, j] = "_";}
+            //Player starting position
+            game[size - 1, playerPos] = "V";
+            
+            //game loop -- based on menu option
+            while (gameCounter <= difficultyLength)       
             {
-
-
-                for (int j = 1; j < (game.GetLength(0) - 1); j++)   //clears first line of old coins
-                {
-                    if (game[1, j] == "o")
-                    {
-                        game[1, j] = " ";
-                    }
-
+                //clears first line of old coins
+                for (int j = 1; j < (game.GetLength(0) - 1); j++)   
+                {   if (game[1, j] == "o")
+                        {game[1, j] = " ";}
                 }
-
+                //creates new coin
                 coinPos = rand.Next(1, size - 2);
-                game[1, coinPos] = "o";            //creates new coin
-
+                game[1, coinPos] = "o";            
+                // print2DArry draws the game board to screen
                 Print2DArray(game,score);
-
-
-
-               
+                // taking user input here then updating game.
                 ConsoleKeyInfo awd = new ConsoleKeyInfo();
                 awd = Console.ReadKey();
-
-                switch (awd.Key)
-                {
-                    case ConsoleKey.A: //left
-                        playerPos -= 1;
-                        oldPosition = playerPos + 1;
-                        game[playerPosX, oldPosition] = " ";
-                        game[playerPosX, playerPos] = "V";
-                            if (game[playerPosX - 1, playerPos] == "o")
-                            {
-                              score++;
-                            }
-                        copyRows(size, game);
-                        Console.Clear();
-                        break;
-                    case ConsoleKey.D: //right
-                        playerPos += 1;
-                        oldPosition = playerPos - 1;
-                        game[playerPosX, oldPosition] = " ";
-                        game[playerPosX, playerPos] = "V";
+                // Checks user input
+                bool breakOut = true;
+                while (breakOut) {
+                    switch (awd.Key)
+                    {
+                        case ConsoleKey.A: //Move left
+                            playerPos -= 1;
+                            oldPosition = playerPos + 1;
+                            game[playerPosX, oldPosition] = " ";
+                            game[playerPosX, playerPos] = "V";
                             if (game[playerPosX - 1, playerPos] == "o")
                             {
                                 score++;
                             }
-                        copyRows(size, game);
-                        Console.Clear();
-                        break;
-                    case ConsoleKey.W: //stay in place
+                            copyRows(size, game);
+                            Console.Clear();
+                            breakOut = false;
+                            break;
+                        case ConsoleKey.D: //Move right
+                            playerPos += 1;
+                            oldPosition = playerPos - 1;
+                            game[playerPosX, oldPosition] = " ";
+                            game[playerPosX, playerPos] = "V";
                             if (game[playerPosX - 1, playerPos] == "o")
                             {
                                 score++;
                             }
-                        copyRows(size, game);
-                        Console.Clear();
-                        break;
+                            copyRows(size, game);
+                            Console.Clear();
+                            breakOut = false;
+                            break;
+                        case ConsoleKey.W: //stay in place (move forward)
+                            if (game[playerPosX - 1, playerPos] == "o")
+                            {
+                                score++;
+                            }
+                            copyRows(size, game);
+                            Console.Clear();
+                            breakOut = false;
+                            break;
+                        default:
+                            break;
 
-                }
-                
-
-
+                    } }
                 gameCounter++;
-                //Console.WriteLine($"\n{score}");
             }
-
+            //game ends
+            Console.WriteLine($"Game Over. Your Score: {score}");
             Console.ReadLine();
         }
 

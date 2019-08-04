@@ -1,4 +1,3 @@
-//using EO.Internal;
 using System;
 
 namespace SpaceGame
@@ -7,17 +6,22 @@ namespace SpaceGame
     {
         static void Main(string[] args)
         {
+
             // inside the for loops: variable "i" is used for the row position. "j" is used for the column position.
             Random rand = new Random();
             int score = 0;
             int coinPos = 0;
-            int size = new int(); // size based on difficulty
+            int size = 11; // size based on difficulty
             string[,] game = new string[size, size];
             int playerPos = size - (size / 2);
             int oldPosition = playerPos;
             int gameCounter = 0;
             int playerPosX = size - 1;
             int difficultyLength = new int();
+            const int quitVariable = 3;
+            int selector = 0;
+            bool userInput = false;
+
             // BUILD GAME BOARD //
             // adding empty space inside game board
             for (int i = 1; i < game.GetLength(0); i++) // Filling in each row    //filling in array
@@ -34,9 +38,48 @@ namespace SpaceGame
             {game[0, j] = "_";}
             //Player starting position
             game[size - 1, playerPos] = "V";
+
+
+            //////////////////////////////////////
+            // Change the number of menu items here
             
-            //game loop -- based on menu option
-            while (gameCounter <= difficultyLength)       
+           
+
+            while (selector != quitVariable)
+            {
+                Console.Clear();
+                DrawMenu();
+                userInput = int.TryParse(Console.ReadLine(), out selector);
+                if (userInput)
+                {
+                    switch (selector)
+                    {
+                        case 1:
+                            // EASY MODE
+                            //size = 8;
+                            selector = 3;
+                            difficultyLength = 50;
+                            break;
+                        case 2:
+                            //HARD MODE
+                            //size = 11;
+                            selector = 3;
+                            difficultyLength = 100;
+                            break;
+                        case 3:
+                            //QUIT GAME
+                            userInput = false;
+                            break;
+                        //  If more cases, add here. If so, go to the top and change maxMenuItems amount the total cases 
+                        default:
+                            break;
+                    }
+                }
+            }
+            while (userInput == true)
+            {
+                //game loop -- based on menu option
+                while (gameCounter <= difficultyLength)       
             {
                 //clears first line of old coins
                 for (int j = 1; j < (game.GetLength(0) - 1); j++)   
@@ -98,9 +141,26 @@ namespace SpaceGame
                 gameCounter++;
             }
             //game ends
-            Console.WriteLine($"Game Over. Your Score: {score}");
+            Console.WriteLine($"Game Over. Your Score: {score}\nPress any key to exit.");
+                userInput = false;
             Console.ReadLine();
+
+            }
         }
+        private static void DrawMenu()
+        {
+            Console.WriteLine(" Welcome To STAR COLLECTOR ");
+            Console.WriteLine("****************************");
+            Console.WriteLine(" Select Your Difficulty ");
+            Console.WriteLine("****************************");
+            Console.WriteLine(" 1. REGULAR");
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(" 2. HARD");
+            Console.ResetColor();
+            Console.WriteLine(" 3. Quit Game");
+            Console.WriteLine("****************************");
+        }
+    
 
         public static void Print2DArray<T>(T[,] matrix, int score)
         {
